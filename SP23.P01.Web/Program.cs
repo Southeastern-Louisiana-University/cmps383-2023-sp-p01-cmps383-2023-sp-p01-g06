@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using SP23.P01.Tests.Web;
+using SP23.P01.Tests.Web.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,6 +12,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+builder.Services.AddDbContext<TrainStationContext>(opt =>
+{
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DataContext"));
+
+}); 
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
