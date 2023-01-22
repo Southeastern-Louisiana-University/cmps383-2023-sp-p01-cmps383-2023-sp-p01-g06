@@ -6,7 +6,7 @@ using SP23.P01.Tests.Web.Helpers;
 namespace SP23.P01.Tests.Web;
 
 [TestClass]
-public class DataContextTests
+public class DataContextTests 
 {
     private WebTestContext context = new();
 
