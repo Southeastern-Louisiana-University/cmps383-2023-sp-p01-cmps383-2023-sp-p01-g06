@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,16 +16,16 @@ namespace SP23.P01.Tests.Web.Dtos
 
 
         public int Id;
-        
-        [Required] // Must return "Name"
-        public string Name;
 
-        
+        [Required, MaxLength(120)] // Must return "Name" Maximum Character Length is 120.
+        public string Name { get; set; } = string.Empty;
+
         [Required] //Must return "Address"
-        public string Address;
+        public string Address { get; set; } = string.Empty;
 
-        
-       
-        
+
+
+
+
     }
 }

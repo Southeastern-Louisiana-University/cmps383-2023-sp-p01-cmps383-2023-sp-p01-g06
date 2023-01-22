@@ -13,12 +13,12 @@ namespace SP23.P01.Tests.Web.Dtos
         public int Id;
 
 
-        [Required] // Must return "Name"
-        public string Name;
+        [Required, MaxLength(120)] // Must return "Name" Maximum character length is 120
+        public string Name { get; set; } = string.Empty;
 
 
         [Required] // Must return "Address"
-        public string Address;
+        public string Address { get; set; } = string.Empty;
 
 
 
