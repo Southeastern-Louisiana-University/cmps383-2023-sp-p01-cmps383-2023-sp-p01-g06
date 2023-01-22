@@ -3,7 +3,7 @@ namespace SP23.P01.Web
     public class WeatherForecast
     {
         public int id { get; set; }
-        public DateOnly Date { get; set; }
+        public DateTime Date { get; set; }
 
         public int TemperatureC { get; set; }
 
