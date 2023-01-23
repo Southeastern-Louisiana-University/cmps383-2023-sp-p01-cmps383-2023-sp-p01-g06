@@ -10,6 +10,5 @@ public class DataContext : DbContext
 
     }
     public DbSet<WeatherForecast> Forecasts { get; set; }
-
     public DbSet<TrainStation> TrainStations { get; set; }
 }
