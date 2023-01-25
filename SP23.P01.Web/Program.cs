@@ -8,7 +8,7 @@ using System;
 
 using SP23.P01.Web.Data;
 using Microsoft.Extensions.Options;
-
+using SP23.P01.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 //Declares dataContext
 var dataContext = builder.Services.AddDbContext<DataContext>(options =>
      options.UseSqlServer(builder.Configuration.GetConnectionString("DataContext")));
+
+
 
 
 builder.Services.AddControllers();
@@ -34,6 +36,14 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<DataContext>();
     db.Database.Migrate();
+
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    DataContext.Initialize(services);
 }
 
 // Configure the HTTP request pipeline.

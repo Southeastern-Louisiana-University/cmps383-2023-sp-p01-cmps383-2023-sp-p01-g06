@@ -17,4 +17,6 @@ public class DataContext : DbContext
         //This is where you make certain fields required
 
     }
+
+
 }
