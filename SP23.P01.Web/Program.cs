@@ -3,9 +3,6 @@ using Microsoft.Extensions.Configuration;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System;
-
-
-
 using SP23.P01.Web.Data;
 using Microsoft.Extensions.Options;
 using SP23.P01.Web;
@@ -31,20 +28,20 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-//To add the Database
+//To add the Database programmatically
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<DataContext>();
     db.Database.Migrate();
 
+    if (!db.TrainStations.Any())
+    {
+
+    }
 }
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
 
-    DataContext.Initialize(services);
-}
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

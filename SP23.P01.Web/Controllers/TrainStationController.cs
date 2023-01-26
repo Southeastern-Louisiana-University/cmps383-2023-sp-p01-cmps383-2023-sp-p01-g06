@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace SP23.P01.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/stations")]
     [ApiController]
     public class TrainStationController : ControllerBase
     {
@@ -20,61 +20,72 @@ namespace SP23.P01.Web.Controllers
             _logger = logger;
         }
 
-        private static readonly string[] Names = new[]
-        {
-        "Hammond", "New Orleans", "Chicago", "New York", "San Francisco"
-        };
 
-        private static readonly string[] Addresses = new[]
+        [HttpGet]
+        public ActionResult<TrainStationDto[]> GetAll()
         {
-        "Hammond", "New Orleans", "Chicago", "New York", "San Francisco"
-        };
-
-
-        [HttpGet(Name = "GetRandomTrainStation")]
-        public IEnumerable<TrainStation> Get()
-        {
-            return Enumerable.Range(1, 5).Select(index => new TrainStation
+            var trains = _dataContext.Set<TrainStation>();
+            return Ok(trains.Select(x => new TrainStationDto
             {
-                Name = Names[Random.Shared.Next(Names.Length)],
-                Address = Addresses[Random.Shared.Next(Addresses.Length)]
-            })
-            .ToArray();
-        }
-
-        [HttpGet("{id:int}", Name = "GetStationById")]
-        public ActionResult<TrainStation> GetById(int id)
-        {
-            if (id <= 0)
-            {
-                return BadRequest();
-            }
-
-            if (id > _dataContext.TrainStations.Count())
-            {
-                return BadRequest();
-            }
-
-            var trainStationToReturn = _dataContext
-                .TrainStations
-                .Select(x => new TrainStation
-                {
                 id = x.id,
                 Name = x.Name,
-                Address = x.Address
-                })
-                .FirstOrDefault(x => x.id == id);
+                Address = x.Address,
+            }).ToList());
+        }
+
+
+        [HttpGet]
+        [Route("{id}")]
+        public ActionResult<TrainStation> GetById(int id)
+        {
+
+            //This is the example they showed in class
+            var trains = _dataContext.Set<TrainStation>();
+            var result = trains.Where(x => x.id == id).Select(x => new TrainStationDto
+            {
+                id = x.id,
+                Name = x.Name,
+                Address = x.Address,
+            }).FirstOrDefault();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(result);
+            }
+
+
+            //My old way of doing it
+            //if (id <= 0)
+            //{
+            //    return NotFound();
+            //}
+
+            //if (id > _dataContext.TrainStations.Count())
+            //{
+            //    return NotFound();
+            //}
+
+            //var trainStationToReturn = _dataContext
+            //    .TrainStations
+            //    .Select(x => new TrainStation
+            //    {
+            //    id = x.id,
+            //    Name = x.Name,
+            //    Address = x.Address
+            //    })
+            //    .FirstOrDefault(x => x.id == id);
             
 
-            
-
-            return Ok(trainStationToReturn);
+            //return Ok(trainStationToReturn);
 
         }
 
 
         [HttpPost]
-        public ActionResult<TrainStation> Create([FromBody] TrainStationCreateDto trainStationToCreate)
+        public ActionResult<TrainStation> Create([FromBody] TrainStationDto trainStationToCreate)
         {
             if (trainStationToCreate.Name == "" || trainStationToCreate.Name == null)
             {
@@ -91,7 +102,7 @@ namespace SP23.P01.Web.Controllers
 
 
 
-            if (trainStationToCreate.Name.Length > 120)
+            if (trainStationToCreate.Name.Length >= 120)
             {
                 return BadRequest(400);
             }
@@ -118,7 +129,9 @@ namespace SP23.P01.Web.Controllers
             };
 
 
-            return Created("api/TrainStation/" + trainStationToAdd.id, trainStationToAdd.Name);
+            return Created("api/TrainStation/", trainStationToReturn);
         }
+
+
     }
 }
