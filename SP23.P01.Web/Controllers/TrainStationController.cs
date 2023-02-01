@@ -25,12 +25,14 @@ namespace SP23.P01.Web.Controllers
         public ActionResult<TrainStationDto[]> GetAll()
         {
             var trains = _dataContext.Set<TrainStation>();
-            return Ok(trains.Select(x => new TrainStationDto
+            var results = trains.Select(x => new TrainStationDto
             {
                 id = x.id,
                 Name = x.Name,
                 Address = x.Address,
-            }).ToList());
+            }).ToList();
+
+            return Ok(results);
         }
 
 
@@ -85,7 +87,8 @@ namespace SP23.P01.Web.Controllers
 
 
         [HttpPost]
-        public ActionResult<TrainStation> Create([FromBody] TrainStationDto trainStationToCreate)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public ActionResult<TrainStation> Create( TrainStationDto trainStationToCreate)
         {
             if (trainStationToCreate.Name == "" || trainStationToCreate.Name == null)
             {
@@ -121,7 +124,7 @@ namespace SP23.P01.Web.Controllers
             _dataContext.TrainStations.Add(trainStationToAdd);
             _dataContext.SaveChanges();
 
-            var trainStationToReturn = new TrainStation
+            var trainStationToReturn = new TrainStationDto
             {
                 id = trainStationToAdd.id,
                 Name = trainStationToAdd.Name,
@@ -129,7 +132,22 @@ namespace SP23.P01.Web.Controllers
             };
 
 
-            return Created("api/TrainStation/", trainStationToReturn);
+            return CreatedAtAction(nameof(GetById), new { id = trainStationToReturn.id }, trainStationToReturn);
+        }
+
+        [HttpDelete("{id:int}")]
+        public ActionResult Delete([FromRoute] int id)
+        {
+            var trainStationToDelete = _dataContext
+                .TrainStations
+                .FirstOrDefault(x => x.id == id);
+            if (trainStationToDelete == null)
+            {
+                return NotFound();
+            }
+            _dataContext.TrainStations.Remove(trainStationToDelete);
+            _dataContext.SaveChanges();
+            return Ok();
         }
 
 

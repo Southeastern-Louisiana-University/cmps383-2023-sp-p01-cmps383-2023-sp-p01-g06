@@ -36,8 +36,10 @@ using (var scope = app.Services.CreateScope())
 
     if (!db.TrainStations.Any())
     {
-
+        SeededData.AddTrainStations(db);
     }
+
+
 }
 
 
