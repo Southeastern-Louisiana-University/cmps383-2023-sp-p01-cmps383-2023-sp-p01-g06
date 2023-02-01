@@ -79,7 +79,7 @@ namespace SP23.P01.Web.Controllers
             //    Address = x.Address
             //    })
             //    .FirstOrDefault(x => x.id == id);
-            
+
 
             //return Ok(trainStationToReturn);
 
@@ -88,7 +88,7 @@ namespace SP23.P01.Web.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<TrainStation> Create( TrainStationDto trainStationToCreate)
+        public ActionResult<TrainStation> Create(TrainStationDto trainStationToCreate)
         {
             if (trainStationToCreate.Name == "" || trainStationToCreate.Name == null)
             {
@@ -150,6 +150,44 @@ namespace SP23.P01.Web.Controllers
             return Ok();
         }
 
+        [HttpPut("{id}")]
+        public ActionResult Update([FromRoute] int id, [FromBody] TrainStationDto trainStation)
+        {
+            if (trainStation == null)
+            {
+                return NotFound();
+            }
 
+            var trainStationToUpdate = _dataContext.TrainStations.FirstOrDefault(x => x.id == id);
+
+            if (trainStationToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            if (trainStation.Name == null || trainStation.Name == "")
+            {
+                return NotFound();
+            }
+
+            if (trainStation.Name.Length >= 120)
+            {
+                return BadRequest(400);
+            }
+
+            if (trainStation.Address == null || trainStation.Address == "")
+            {
+                return NotFound();
+            }
+
+            trainStationToUpdate.Name = trainStation.Name;
+            trainStationToUpdate.Address = trainStation.Address;
+
+            _dataContext.SaveChanges();
+
+            return Ok(trainStationToUpdate);
+
+
+        }
     }
 }
