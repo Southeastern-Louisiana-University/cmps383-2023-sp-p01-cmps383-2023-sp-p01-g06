@@ -38,7 +38,7 @@ namespace SP23.P01.Web.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public ActionResult<TrainStation> GetById(int id)
+        public ActionResult<TrainStationDto> GetById(int id)
         {
 
             //This is the example they showed in class
@@ -88,7 +88,7 @@ namespace SP23.P01.Web.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<TrainStation> Create(TrainStationDto trainStationToCreate)
+        public ActionResult<TrainStationDto> Create(TrainStationDto trainStationToCreate)
         {
             if (trainStationToCreate.Name == "" || trainStationToCreate.Name == null)
             {
